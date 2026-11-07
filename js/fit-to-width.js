@@ -1,4 +1,7 @@
 function maybeFitToWidth() {
+  if (document.documentElement.classList.contains('modern-ui')) {
+    return;
+  }
   let ratio;
   if (Options.fitToWidth()) {
     let width = window.innerWidth;

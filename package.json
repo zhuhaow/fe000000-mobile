@@ -1,0 +1,13 @@
+{
+  "name": "fe000000-mobile",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A responsive, save-compatible interface for Dan Simon's FE000000",
+  "license": "MIT",
+  "scripts": {
+    "build": "node compile.js",
+    "start": "python3 -m http.server 8080 --bind 127.0.0.1",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": { "linkedom": "0.18.15" }
+}

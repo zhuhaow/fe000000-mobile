@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>FE000000</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="FE000000 — a mobile-friendly interface for Dan Simon's incremental game.">
+  <script src="js/ui-boot.js"></script>
   <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
   <meta content="utf-8" http-equiv="encoding">
   <script src="js/tslib.js"></script>
@@ -100,6 +104,8 @@
   <script src="js/update-display.js?time=%time%"></script>
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="styles.css?time=%time%">
+  <link rel="stylesheet" href="mobile.css?time=%time%">
+  <script src="js/mobile-ui.js?time=%time%"></script>
 </head>
 <body>
   <div id="loading">
@@ -109,7 +115,7 @@
     <br/>
     <span>Reloading might work, so probably try that first.</span>
     <br id="script-count-br" style="display: none;"/>
-    <span id="script-count-span" style="display: none;">The page loads <span id="script-count"></span> scripts (should be 94).</span>
+    <span id="script-count-span" style="display: none;">The page loads <span id="script-count"></span> scripts (should be 96).</span>
     <br/>
     <span><button onclick="window.location.reload(true)">Reload window</button> <button class="export-button" onclick="Saving.exportGame(0)">Export</button> <button onclick="Saving.loadGamePrompt()">Import/Load</button> <button onclick="Saving.resetGameWithConfirmation()">RESET THE GAME</button></span>
   </div>
@@ -271,7 +277,7 @@
     </div>
     <br/>
     <br/>
-    <tab ~style.display=Tabs.currentTab() === 'main' ? '' : 'none'~>
+    <tab class="game-page" data-tab="main" ~style.display=Tabs.currentTab() === 'main' ? '' : 'none'~>
       <div ~style.display=Stars.canBuyThings() ? 'none' : ''~>
         <span>The ~r Stars.collapsedText() ~ collapsed due to an excess of stars.</span>
         <br/>
@@ -312,7 +318,7 @@
         <span ~style.display=(PrestigeLayerProgress.hasReached('prestige') || Options.showAllTabs()) ? '' : 'none'~>View all ~r Generators.term() ~ even if they would be otherwise invisible: <input type="checkbox" ~!checked=Options.rawViewAllGenerators('normal')~ ~!onchange=function() {Options.setRawViewAllGenerators('normal', this.checked)}~></input></span>
         <br/>
         <br/>
-        <table style="margin-left: auto; margin-right: auto; border-spacing: 24px 0px; border-collapse: separate;">
+        <table class="ui-gen-table" style="margin-left: auto; margin-right: auto; border-spacing: 24px 0px; border-collapse: separate;">
           <loop i 1 8>
             <tr ~style.display=Generator(% @i %).isVisible() ? '' : 'none'~>
               <td>~r Generators.term(true, true) ~ ~o % @i % ~</td>
@@ -351,7 +357,7 @@
         <span ~style.display=SpecialDivs.isDivVisible('hardcap') ? '' : 'none'~>It is impossible to get more than ~f MultiverseCollapse.stars() ~ stars.</span>
       </div>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'infinity' ? '' : 'none'~>
+    <tab class="game-page" data-tab="infinity" ~style.display=Tabs.currentTab() === 'infinity' ? '' : 'none'~>
       <span>You have ~i InfinityPoints.amount() ~ infinity point~s InfinityPoints.amount() ~ (IP).
         <button ~class=InfinityMaxAll.anythingToBuy() ? "" : "disabled"~ onclick="InfinityMaxAll.maxAll()">Max all</button>
         <button ~class=InfinityMaxAll.anyUpgradesToBuy() ? "" : "disabled"~ onclick="InfinityMaxAll.maxUpgrades()">Max upgrades</button>
@@ -397,7 +403,7 @@
         </tr>
       </table>
       <br/>
-      <table style="margin-left: auto; margin-right: auto; border-spacing: 24px 0px; border-collapse: separate;">
+      <table class="ui-gen-table" style="margin-left: auto; margin-right: auto; border-spacing: 24px 0px; border-collapse: separate;">
         <loop i 1 8>
           <tr ~style.display=InfinityGenerator(% @i %).isVisible() ? '' : 'none'~>
             <td>Infinity Generator ~o % @i % ~</td>
@@ -411,7 +417,7 @@
         </loop>
       </table>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'normal-challenges' ? '' : 'none'~>
+    <tab class="game-page" data-tab="normal-challenges" ~style.display=Tabs.currentTab() === 'normal-challenges' ? '' : 'none'~>
       <span>You have completed ~i Challenge.numberOfChallengesCompleted() ~ normal challenge~s Challenge.numberOfChallengesCompleted() ~, multiplying all ~r Generators.term() ~ by ~f Challenge.multiplier() ~.</span>
       <br/>
       <span><button onclick="Challenge.toggleRestartOnCompletion()">Restart normal challenges on completion: ~r Challenge.restartOnCompletion() ? "On" : "Off" ~</button> <button onclick="Challenge.toggleHideCompletedChallenges()">Hide completed normal challenges: ~r Challenge.hideCompletedChallenges() ? 'On' : 'Off' ~</button></span>
@@ -557,7 +563,7 @@
         </div>
       </div>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'autobuyers' ? '' : 'none'~>
+    <tab class="game-page" data-tab="autobuyers" ~style.display=Tabs.currentTab() === 'autobuyers' ? '' : 'none'~>
       <span>You have ~i Autobuyers.numberOfAutobuyers() ~ autobuyer~s Autobuyers.numberOfAutobuyers() ~.</span>
       <br ~style.display=Autobuyers.isLockedResetAutobuyer(15) ? '' : 'none'~/>
       <span ~style.display=Autobuyers.isLockedResetAutobuyer(15) ? '' : 'none'~>The complexity autobuyer is off when unlocked unless you explicitly pre-set it to be on.</span>
@@ -1004,7 +1010,7 @@
       </tr>
       </table>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'infinity-challenges' ? '' : 'none'~>
+    <tab class="game-page" data-tab="infinity-challenges" ~style.display=Tabs.currentTab() === 'infinity-challenges' ? '' : 'none'~>
       <span>You have completed ~i InfinityChallenge.numberOfInfinityChallengesCompleted() ~ infinity challenge~s InfinityChallenge.numberOfInfinityChallengesCompleted() ~, multiplying all infinity generators by ~f InfinityChallenge.multiplier() ~.</span>
       <br/>
       <span>You have produced ~f InfinityChallenge.totalStarsProducedThisEternity() ~ stars this eternity.</span>
@@ -1138,7 +1144,7 @@
         </div>
       </div>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'eternity' ? '' : 'none'~>
+    <tab class="game-page" data-tab="eternity" ~style.display=Tabs.currentTab() === 'eternity' ? '' : 'none'~>
       <span>You have ~i EternityPoints.amount() ~ eternity point~s EternityPoints.amount() ~ (EP).
         <button ~class=EternityMaxAll.anythingToBuy() ? "" : "disabled"~ onclick="EternityMaxAll.maxAll()">Max all</button>
         <button ~class=EternityMaxAll.anyUpgradesToBuy() ? "" : "disabled"~ onclick="EternityMaxAll.maxUpgrades()">Max upgrades</button>
@@ -1187,7 +1193,7 @@
         </tr>
       </table>
       <br/>
-      <table style="margin-left: auto; margin-right: auto; border-spacing: 24px 0px; border-collapse: separate;">
+      <table class="ui-gen-table" style="margin-left: auto; margin-right: auto; border-spacing: 24px 0px; border-collapse: separate;">
         <loop i 1 8>
           <tr ~style.display=EternityGenerator(% @i %).isVisible() ? '' : 'none'~>
             <td>Eternity Generator ~o % @i % ~</td>
@@ -1201,7 +1207,7 @@
         </loop>
       </table>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'eternity-milestones' ? '' : 'none'~>
+    <tab class="game-page" data-tab="eternity-milestones" ~style.display=Tabs.currentTab() === 'eternity-milestones' ? '' : 'none'~>
       <span>
         You have ~q Eternities.amount() ~ eternit~y Eternities.amount() ~.
         <button ~style.display=(EternityMilestones.hasEternityMilestone(6) || PrestigeLayerProgress.hasReached('complexity')) ? '' : 'none'~ onclick="EternityMilestones.toggleMilestone(6)">Eternity Milestone ~i 6 ~: ~r (EternityMilestones.isEternityMilestoneDisabled(6) ? "Disabled" : "Enabled") + (EternityMilestones.hasEternityMilestone(6) ? '' : ' (once unlocked)') ~</button>
@@ -1368,7 +1374,7 @@
       </table>
       <span ~style.display=SpecialTabs.isTabVisible('eternity-producer') ? 'none' : ''~>Completing all eternity milestones for the first time will also let you view the Eternity Producer tab.</span>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'studies' ? '' : 'none'~>
+    <tab class="game-page" data-tab="studies" ~style.display=Tabs.currentTab() === 'studies' ? '' : 'none'~>
       <span>You have ~i Studies.totalTheorems() ~ total theorem~s Studies.totalTheorems() ~ (a breakdown is below the theorem purchase buttons) and ~i Studies.unspentTheorems() ~ unspent theorem~s Studies.unspentTheorems() ~.</span>
       <br/>
       <span ~style.display=(EternityChallenge.getUnlockedEternityChallengeCost() === 0) ? 'none' : ''~>You have unlocked Eternity Challenge ~o EternityChallenge.getUnlockedEternityChallenge() ~, costing ~i EternityChallenge.getUnlockedEternityChallengeCost() ~ theorem~s EternityChallenge.getUnlockedEternityChallengeCost() ~.</span>
@@ -1743,7 +1749,7 @@
       <br/>
       <span style="display: none;">Exported studies (also copied to clipboard): <input id="study-export-output"></input></span>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'eternity-producer' ? '' : 'none'~>
+    <tab class="game-page" data-tab="eternity-producer" ~style.display=Tabs.currentTab() === 'eternity-producer' ? '' : 'none'~>
       <div ~style.display=EternityProducer.isUnlocked() ? 'none' : ''~>
         <button style="height: 48px;" onclick="EternityProducer.unlock()" ~class=EternityProducer.canUnlock() ? '' : (ComplexityChallenge.isSafeguardOn(3) ? 'forbidden' : 'disabled')~>
           Unlock the Eternity Producer<br/>Cost: ~f EternityProducer.unlockCost() ~ eternity points
@@ -1833,7 +1839,7 @@
         </div>
       </div>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'eternity-challenges' ? '' : 'none'~>
+    <tab class="game-page" data-tab="eternity-challenges" ~style.display=Tabs.currentTab() === 'eternity-challenges' ? '' : 'none'~>
       <span>You have completed ~i EternityChallenge.getTotalEternityChallengeCompletions() ~ eternity challenge (EC) tier~s EternityChallenge.getTotalEternityChallengeCompletions() ~, giving you ~i EternityChallenge.extraTheoremsActualAndDisplay() ~ extra theorem~s EternityChallenge.extraTheoremsActualAndDisplay() ~ (~i 1 ~ per tier).</span>
       <br/>
       <span>
@@ -2095,7 +2101,7 @@
         </span>
       </div>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'chroma' ? '' : 'none'~>
+    <tab class="game-page" data-tab="chroma" ~style.display=Tabs.currentTab() === 'chroma' ? '' : 'none'~>
       <div ~style.display=Chroma.isUnlocked() ? 'none' : ''~>
         <button style="height: 48px;" onclick="Chroma.unlockColor(1)" ~class=Chroma.canUnlockColor(1) ? '' : (ComplexityChallenge.isSafeguardOn(4) ? 'forbidden' : 'disabled')~>
           Unlock Chroma<br/>Cost: ~f Chroma.getUnlockColorCost(1) ~ eternity points
@@ -2256,7 +2262,7 @@
         </table>
       </div>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'complexity' ? '' : 'none'~>
+    <tab class="game-page" data-tab="complexity" ~style.display=Tabs.currentTab() === 'complexity' ? '' : 'none'~>
       <span>You have ~i ComplexityPoints.amount() ~ complexity point~s ComplexityPoints.amount() ~ (ℂP).
         <button ~class=ComplexityMaxAll.anythingToBuy() ? "" : "disabled"~ onclick="ComplexityMaxAll.maxAll()">Max all</button>
         <button onclick="Explanations.showOrHide('complexity-details', 'main')">Details: ~r Explanations.isShown('complexity-details', 'main') ? 'Shown' : 'Hidden' ~</button>
@@ -2285,7 +2291,7 @@
       <span>View all complexity generators even if they would be otherwise invisible: <input type="checkbox" ~!checked=Options.rawViewAllGenerators('complexity')~ ~!onchange=function() {Options.setRawViewAllGenerators('complexity', this.checked)}~></input></span>
       <br/>
       <br/>
-      <table style="margin-left: auto; margin-right: auto; border-spacing: 24px 0px; border-collapse: separate;">
+      <table class="ui-gen-table" style="margin-left: auto; margin-right: auto; border-spacing: 24px 0px; border-collapse: separate;">
         <loop i 1 8>
           <tr ~style.display=ComplexityGenerator(% @i %).isVisible() ? '' : 'none'~>
             <td>Complexity Generator ~o % @i % ~</td>
@@ -2299,7 +2305,7 @@
         </loop>
       </table>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'complexity-challenges' ? '' : 'none'~>
+    <tab class="game-page" data-tab="complexity-challenges" ~style.display=Tabs.currentTab() === 'complexity-challenges' ? '' : 'none'~>
       <span>You have completed ~i ComplexityChallenge.getTotalComplexityChallengeCompletions() ~ complexity challenge tier~s ComplexityChallenge.getTotalComplexityChallengeCompletions() ~.</span>
       <br/>
       <span>You have ~i Complexities.amount() ~ complexit~y Complexities.amount() ~ (allowing you to enter ~i ComplexityChallenge.numberUnlocked() ~ complexity challenge~s ComplexityChallenge.numberUnlocked() ~).</span>
@@ -2452,7 +2458,7 @@
         </div>
       </div>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'complexity-achievements' ? '' : 'none'~>
+    <tab class="game-page" data-tab="complexity-achievements" ~style.display=Tabs.currentTab() === 'complexity-achievements' ? '' : 'none'~>
       <span>
         You have unlocked ~i ComplexityAchievements.getTotalAchievementsUnlocked() ~ complexity achievement~s ComplexityAchievements.getTotalAchievementsUnlocked() ~.
       </span>
@@ -2681,7 +2687,7 @@
       </table>
       <span ~style.display=SpecialTabs.isTabVisible('powers') ? 'none' : ''~>Completing all complexity achievements for the first time will also let you view the Powers tab.</span>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'powers' ? '' : 'none'~>
+    <tab class="game-page" data-tab="powers" ~style.display=Tabs.currentTab() === 'powers' ? '' : 'none'~>
       <div ~style.display=Powers.isUnlocked() ? 'none' : ''~>
         <button style="height: 48px;" onclick="Powers.unlock()" ~class=Powers.canUnlock() ? '' : 'disabled'~>
           Unlock Powers<br/>Cost: ~f Powers.unlockCost() ~ complexity points
@@ -3000,7 +3006,7 @@
         <span style="display: none;">Exported equipped powers (also copied to clipboard): <input id="powers-export-output"></input></span>
       </div>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'oracle' ? '' : 'none'~>
+    <tab class="game-page" data-tab="oracle" ~style.display=Tabs.currentTab() === 'oracle' ? '' : 'none'~>
       <div ~style.display=Oracle.isUnlocked() ? 'none' : ''~>
         <button style="height: 48px;" onclick="Oracle.unlock()" ~class=Oracle.canUnlock() ? '' : 'disabled'~>
           Unlock the Oracle<br/>Cost: ~f Oracle.unlockCost() ~ complexity points
@@ -3126,7 +3132,7 @@
         </div>
       </div>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'galaxies' ? '' : 'none'~>
+    <tab class="game-page" data-tab="galaxies" ~style.display=Tabs.currentTab() === 'galaxies' ? '' : 'none'~>
       <div ~style.display=Galaxy.isUnlocked() ? 'none' : ''~>
         <button style="height: 48px;" onclick="Galaxy.unlock()" ~class=Galaxy.canUnlock() ? '' : 'disabled'~>
           Unlock Galaxies<br/>Cost: ~f Galaxy.unlockCost() ~ complexity points
@@ -3194,7 +3200,7 @@
         </div>
       </div>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'finality' ? '' : 'none'~>
+    <tab class="game-page" data-tab="finality" ~style.display=Tabs.currentTab() === 'finality' ? '' : 'none'~>
       <span>You have ~i FinalityPoints.amount() ~ finality point~s FinalityPoints.amount() ~ (FP).
         <button ~class=FinalityMaxAll.anythingToBuy() ? "" : "disabled"~ onclick="FinalityMaxAll.maxAll()">Max all</button>
         <button onclick="Explanations.showOrHide('finality-details', 'main')">Details: ~r Explanations.isShown('finality-details', 'main') ? 'Shown' : 'Hidden' ~</button>
@@ -3216,7 +3222,7 @@
       <span>View all finality generators even if they would be otherwise invisible: <input type="checkbox" ~!checked=Options.rawViewAllGenerators('finality')~ ~!onchange=function() {Options.setRawViewAllGenerators('finality', this.checked)}~></input></span>
       <br/>
       <br/>
-      <table style="margin-left: auto; margin-right: auto; border-spacing: 24px 0px; border-collapse: separate;">
+      <table class="ui-gen-table" style="margin-left: auto; margin-right: auto; border-spacing: 24px 0px; border-collapse: separate;">
         <loop i 1 8>
           <tr ~style.display=FinalityGenerator(% @i %).isVisible() ? '' : 'none'~>
             <td>Finality Generator ~o % @i % ~</td>
@@ -3229,7 +3235,7 @@
         </loop>
       </table>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'finality-shards' ? '' : 'none'~>
+    <tab class="game-page" data-tab="finality-shards" ~style.display=Tabs.currentTab() === 'finality-shards' ? '' : 'none'~>
       <span>You have ~i FinalityShards.total() ~ total finality shard~s FinalityShards.total() ~ and ~i FinalityShards.amount() ~ unspent finality shard~s FinalityShards.amount() ~ (FS).
         <button ~class=FinalityShards.anythingToBuy() ? "" : "disabled"~ onclick="FinalityShards.maxAll()">Max all</button>
       </span>
@@ -3361,7 +3367,7 @@
       <br/>
       <span style="display: none;">Exported finality shard upgrades (also copied to clipboard): <input id="finality-shard-upgrades-export-output"></input></span>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'finality-milestones' ? '' : 'none'~>
+    <tab class="game-page" data-tab="finality-milestones" ~style.display=Tabs.currentTab() === 'finality-milestones' ? '' : 'none'~>
       <span>
         You have ~q Finalities.amount() ~ finalit~y Finalities.amount() ~.
       </span>
@@ -3520,7 +3526,7 @@
         </tr>
       </table>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'goals' ? '' : 'none'~>
+    <tab class="game-page" data-tab="goals" ~style.display=Tabs.currentTab() === 'goals' ? '' : 'none'~>
       <span>You have completed ~i Goals.numberOfGoalsCompleted() ~/~i Goals.numberOfGoals() ~ goals.</span>
       <br/>
       <span>By default, only goals up to the next goal after the last completed goal are displayed. <button onclick="Goals.toggleDisplayAllGoals()">Display all goals: ~r Goals.displayAllGoals() ? "On" : "Off" ~</button></span>
@@ -3549,7 +3555,7 @@
         </loop>
       </table>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'achievements' ? '' : 'none'~>
+    <tab class="game-page" data-tab="achievements" ~style.display=Tabs.currentTab() === 'achievements' ? '' : 'none'~>
       <span>You have completed ~i Achievements.getTotalAchievementsUnlocked() ~ achievements.</span>
       <br/>
       <span>Only achievements up to ~i Achievements.beyondHighest() ~ beyond the last achievement you have are shown. The others are replaced with question marks.</span>
@@ -4371,7 +4377,7 @@
         <span ~style.display=Achievements.showAchievementDescriptionBelow(12, 8) ? '' : 'none'~>~r Achievements.getAchievementName(12, 8) ~ (~r Achievements.achievementStatusDescription(12, 8) ~): Buy the maximum possible of all finality shard upgrades.</span>
       </div>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'statistics' ? '' : 'none'~>
+    <tab class="game-page" data-tab="statistics" ~style.display=Tabs.currentTab() === 'statistics' ? '' : 'none'~>
       <span>You have produced ~f player.stats.totalStarsProduced ~ total stars.</span>
       <br ~style.display=PrestigeLayerProgress.hasReached('eternity') ? '' : 'none'~/>
       <span ~style.display=PrestigeLayerProgress.hasReached('eternity') ? '' : 'none'~>You have produced ~f player.stats.totalStarsProducedThisEternity ~ stars this eternity.</span>
@@ -4443,7 +4449,7 @@
         <span>ℂP generation: ~r player.cheats.complexityPointGeneration ? 'On' : 'Off' ~</span>
       </div>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'last-ten-runs' ? '' : 'none'~>
+    <tab class="game-page" data-tab="last-ten-runs" ~style.display=Tabs.currentTab() === 'last-ten-runs' ? '' : 'none'~>
       <div ~style.display=Stats.showRun(1, 'infinity') ? '' : 'none'~>
         <loop i 1 20>
           % (@i > 1) ? `<br ~style.display=Stats.showRun(${@i}, 'infinity') ? '' : 'none'~/>` : "" %
@@ -4483,7 +4489,7 @@
       <br/>
       <span>Number of last runs of each type to show (maximum ~i 20 ~): <input type="text" class="last-runs-to-show" ~!value=NotationOptions.format('last-runs-to-show')~ ~!onchange=function() {Stats.setLastRunsToShow(NotationOptions.read('last-runs-to-show', this.value))}~></input></span>
     </tab>
-    <tab ~style.display=Tabs.currentTab() === 'options' ? '' : 'none'~>
+    <tab class="game-page" data-tab="options" ~style.display=Tabs.currentTab() === 'options' ? '' : 'none'~>
       <span><button ~class-name=Options.showExportNotification() ? 'redspan' : ''~ onclick="Options.setOptionTypeShown('saving')">Show saving options</button> <button onclick="Options.setOptionTypeShown('color')">Show color options</button> <button onclick="Options.setOptionTypeShown('tab')">Show tab options</button> <button onclick="Options.setOptionTypeShown('other')">Show other options</button></span>
       <br/>
       <button ~style.display=Explanations.isVisible('options', 'offline') ? '' : 'none'~ onclick="Explanations.showOrHide('options', 'offline')">Offline progress explanation: ~r Explanations.isShown('options', 'offline') ? 'Shown' : 'Hidden' ~</button>
@@ -4922,7 +4928,7 @@
       <br/>
       <div style="width: 1024px; margin-left: auto; margin-right: auto;">List of hotkeys: ~r Hotkeys.listText() ~.</div>
       <br/>
-      <span><a target="_blank" rel="noopener noreferrer" href="guide/index.html">Guide</a><span style="display: inline-block; width: 256px;"></span><a target="_blank" rel="noopener noreferrer" href="https://discord.gg/7JfmqF2">Discord</a><span style="display: inline-block; width: 256px;"></span><a target="_blank" rel="noopener noreferrer" href="https://github.com/dan-simon/misc">Github repository (also has other stuff)</a></span>
+      <span><a target="_blank" rel="noopener noreferrer" href="https://dan-simon.github.io/misc/fe000000/guide/">Guide</a><span style="display: inline-block; width: 256px;"></span><a target="_blank" rel="noopener noreferrer" href="https://discord.gg/7JfmqF2">Discord</a><span style="display: inline-block; width: 256px;"></span><a target="_blank" rel="noopener noreferrer" href="https://github.com/dan-simon/misc">Github repository (also has other stuff)</a></span>
       <br/>
       <br/>
       <div style="width: 1024px; margin-left: auto; margin-right: auto;">
